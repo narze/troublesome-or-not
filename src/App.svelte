@@ -27,7 +27,7 @@
   let troublesomeEntries = []
   let notTroublesomeEntries = []
 
-  const unsub = onSnapshot(query(collection(db, "votes"), limit(100)), (querySnapshot) => {
+  const unsub = onSnapshot(query(collection(db, "votes"), limit(1000)), (querySnapshot) => {
     const entries = []
     const t = []
     const nt = []
