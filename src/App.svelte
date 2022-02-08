@@ -6,6 +6,9 @@
   import Kofi from "./lib/Kofi.svelte"
   import Menu from "./lib/Menu.svelte"
   import Social from "./lib/Social.svelte"
+  import { db } from "./lib/firebase"
+  import { collection, onSnapshot, doc, query, limit, setDoc } from "firebase/firestore"
+  import { nanoid } from "nanoid"
 
   const url = "https://troublesome-or-not.vercel.app"
   const title = "คุณคิดว่า..."
@@ -16,14 +19,43 @@
   const imageUrl =
     "https://raw.githubusercontent.com/narze/timelapse/master/projects/troublesome-or-not_home.png"
   const gtagId = null
+  const id = localStorage.getItem("ton-id") || nanoid()
+
+  localStorage.setItem("ton-id", id)
 
   let x, y, value
+  let troublesomeEntries = []
+  let notTroublesomeEntries = []
+
+  const unsub = onSnapshot(query(collection(db, "votes"), limit(100)), (querySnapshot) => {
+    const entries = []
+    const t = []
+    const nt = []
+
+    querySnapshot.forEach((doc) => {
+      entries.push({ id: doc.id, ...doc.data() })
+    })
+    console.log("Current data ", entries)
+
+    entries.forEach((entry) => {
+      if (entry.value) {
+        t.push(entry)
+      } else {
+        nt.push(entry)
+      }
+    })
+
+    troublesomeEntries = t
+    notTroublesomeEntries = nt
+  })
 
   function submitIsTroublesome(e) {
     const rect = e.target.getBoundingClientRect()
     x = ((e.clientX - rect.left) / rect.width) * 100
     y = ((e.clientY - rect.top) / rect.height) * 100
     value = true
+
+    upsert()
   }
 
   function submitIsNotTroublesome(e) {
@@ -31,6 +63,22 @@
     x = ((e.clientX - rect.left) / rect.width) * 100
     y = ((e.clientY - rect.top) / rect.height) * 100
     value = false
+
+    upsert()
+  }
+
+  async function upsert() {
+    try {
+      await setDoc(doc(db, "votes", id), {
+        x,
+        y,
+        value,
+      })
+
+      console.log("Document upserted with ID: ", id, { x, y, value })
+    } catch (e) {
+      console.error("Error adding document: ", e)
+    }
   }
 </script>
 
@@ -44,17 +92,29 @@
     สร้างความ<span class="underline text-red-600">เดือดร้อน</span>หรือไม่
   </h1>
 
-  <div class="fixed">x: {x}, y: {y}, value: {value}</div>
+  <!-- <div class="fixed">x: {x}, y: {y}, value: {value}</div> -->
 
   <div class="flex-grow w-full flex">
     <div class="flex-grow text-center flex flex-col">
       <p class="underline text-red-600 text-xl mt-4">เดือดร้อน</p>
-      <div on:click={submitIsTroublesome} class="bg-gray-200 flex-grow mt-4" />
+      <div on:click={submitIsTroublesome} class="flex-grow mt-4 relative">
+        {#each troublesomeEntries as entry, i (i)}
+          <div class="sticker absolute" style={`top: ${entry.y}%; left: ${entry.x}%; `}>
+            <!-- {entry.id} -->
+          </div>
+        {/each}
+      </div>
     </div>
     <span class="w-0.5 bg-black mt-14" />
     <div class="flex-grow text-center flex flex-col">
       <p class="underline text-red-600 text-xl mt-4">ไม่เดือดร้อน</p>
-      <div on:click={submitIsNotTroublesome} class="bg-gray-200 flex-grow mt-4" />
+      <div on:click={submitIsNotTroublesome} class="flex-grow mt-4 relative">
+        {#each notTroublesomeEntries as entry, i (i)}
+          <div class="sticker absolute" style={`top: ${entry.y}%; left: ${entry.x}%; `}>
+            <!-- {entry.id} -->
+          </div>
+        {/each}
+      </div>
     </div>
   </div>
 </main>
@@ -63,5 +123,14 @@
   :root {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
       "Open Sans", "Helvetica Neue", sans-serif;
+  }
+
+  .sticker {
+    margin-top: -1rem;
+    margin-left: -1rem;
+    height: 2rem;
+    width: 2rem;
+    background-color: lime;
+    border-radius: 50%;
   }
 </style>
