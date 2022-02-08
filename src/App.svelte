@@ -49,22 +49,26 @@
     notTroublesomeEntries = nt
   })
 
-  function submitIsTroublesome(e) {
+  async function submitIsTroublesome(e) {
     const rect = e.target.getBoundingClientRect()
     x = ((e.clientX - rect.left) / rect.width) * 100
     y = ((e.clientY - rect.top) / rect.height) * 100
     value = true
 
-    upsert()
+    await upsert()
+
+    alert("ขอบคุณสำหรับการโหวต!")
   }
 
-  function submitIsNotTroublesome(e) {
+  async function submitIsNotTroublesome(e) {
     const rect = e.target.getBoundingClientRect()
     x = ((e.clientX - rect.left) / rect.width) * 100
     y = ((e.clientY - rect.top) / rect.height) * 100
     value = false
 
-    upsert()
+    await upsert()
+
+    alert("ขอบคุณสำหรับการโหวต!")
   }
 
   async function upsert() {
@@ -104,6 +108,7 @@
           </div>
         {/each}
       </div>
+      <p>{troublesomeEntries.length}</p>
     </div>
     <span class="w-0.5 bg-black mt-14" />
     <div class="flex-grow text-center flex flex-col">
@@ -115,6 +120,7 @@
           </div>
         {/each}
       </div>
+      <p>{notTroublesomeEntries.length}</p>
     </div>
   </div>
 </main>
