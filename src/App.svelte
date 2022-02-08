@@ -102,7 +102,7 @@
     <div class="flex-grow text-center flex flex-col">
       <p class="underline text-red-600 text-xl mt-4">เดือดร้อน</p>
       <div on:click={submitIsTroublesome} class="flex-grow mt-4 relative">
-        {#each troublesomeEntries as entry, i (i)}
+        {#each troublesomeEntries as entry (entry.id)}
           <div class="sticker absolute" style={`top: ${entry.y}%; left: ${entry.x}%; `}>
             <!-- {entry.id} -->
           </div>
@@ -114,7 +114,7 @@
     <div class="flex-grow text-center flex flex-col">
       <p class="underline text-red-600 text-xl mt-4">ไม่เดือดร้อน</p>
       <div on:click={submitIsNotTroublesome} class="flex-grow mt-4 relative">
-        {#each notTroublesomeEntries as entry, i (i)}
+        {#each notTroublesomeEntries as entry (entry.id)}
           <div class="sticker absolute" style={`top: ${entry.y}%; left: ${entry.x}%; `}>
             <!-- {entry.id} -->
           </div>
