@@ -142,7 +142,7 @@
 <Head {title} {description} {url} {imageUrl} {gtagId} />
 
 <main class="w-full h-screen p-2 flex flex-col items-center">
-  <h1 class="text-4xl md:text-6xl flex gap-3 mt-2">
+  <h1 class="inline-block text-3xl sm:text-4xl md:text-6xl flex gap-3 mt-2 text-center">
     สร้างความ<span class="underline text-red-600">เดือดร้อน</span>หรือไม่
   </h1>
 
