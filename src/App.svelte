@@ -26,6 +26,7 @@
   let x, y, value
   let troublesomeEntries = []
   let notTroublesomeEntries = []
+  let active = true
 
   const unsub = onSnapshot(query(collection(db, "votes"), limit(1000)), (querySnapshot) => {
     const entries = []
@@ -49,7 +50,17 @@
     notTroublesomeEntries = nt
   })
 
+  // Active for 10 seconds only, to save quotas,
+  setTimeout(() => {
+    active = false
+    unsub()
+  }, 10000)
+
   async function submitIsTroublesome(e) {
+    if (!active) {
+      return
+    }
+
     const rect = e.target.getBoundingClientRect()
     x = ((e.clientX - rect.left) / rect.width) * 100
     y = ((e.clientY - rect.top) / rect.height) * 100
@@ -61,6 +72,10 @@
   }
 
   async function submitIsNotTroublesome(e) {
+    if (!active) {
+      return
+    }
+
     const rect = e.target.getBoundingClientRect()
     x = ((e.clientX - rect.left) / rect.width) * 100
     y = ((e.clientY - rect.top) / rect.height) * 100
