@@ -7,7 +7,7 @@
   import Menu from "./lib/Menu.svelte"
   import Social from "./lib/Social.svelte"
   import { db } from "./lib/firebase"
-  import { collection, onSnapshot, doc, query, limit, setDoc } from "firebase/firestore"
+  import { collection, onSnapshot, doc, query, limit, setDoc, updateDoc } from "firebase/firestore"
   import { nanoid } from "nanoid"
 
   const url = "https://troublesome-or-not.vercel.app"
@@ -24,25 +24,48 @@
   localStorage.setItem("ton-id", id)
 
   let x, y, value
-  let troublesomeEntries = []
-  let notTroublesomeEntries = []
+  let troublesomeEntries: Array<{ x: number; y: number; id: string }> = []
+  let notTroublesomeEntries: Array<{ x: number; y: number; id: string }> = []
   let active = true
 
-  const unsub = onSnapshot(query(collection(db, "votes"), limit(1000)), (querySnapshot) => {
-    const entries = []
-    const t = []
-    const nt = []
+  // onSnapshot(query(collection(db, "votes"), limit(1000)), (querySnapshot) => {
+  //   const entries: Array<{ id: string; value: boolean; x: number; y: number }> = []
+
+  //   querySnapshot.forEach((doc) => {
+  //     entries.push({ id: doc.id, ...doc.data() } as unknown as any)
+  //   })
+  //   console.log("Current old ", entries)
+
+  //   const data = {}
+  //   entries.forEach(({ id, x, y, value }) => {
+  //     data[id] = { x: round(x), y: round(y), value }
+  //   })
+
+  //   setDoc(docRef, data, { merge: true })
+  // })
+
+  const date = new Date().toISOString().split("T")[0]
+  const docRef = doc(db, "votesMap", date)
+
+  const unsub = onSnapshot(query(collection(db, "votesMap")), (querySnapshot) => {
+    const entries: Record<string, { x: number; y: number; value: boolean }> = {}
+    const t: Array<{ x: number; y: number; id: string }> = []
+    const nt: Array<{ x: number; y: number; id: string }> = []
 
     querySnapshot.forEach((doc) => {
-      entries.push({ id: doc.id, ...doc.data() })
+      Object.entries(doc.data()).forEach(([id, values]) => {
+        entries[id] = { id, ...values }
+      })
     })
     console.log("Current data ", entries)
 
-    entries.forEach((entry) => {
-      if (entry.value) {
-        t.push(entry)
+    Object.entries(entries).forEach(([id, entry]) => {
+      const { x, y, value } = entry
+
+      if (value) {
+        t.push({ x, y, id })
       } else {
-        nt.push(entry)
+        nt.push({ x, y, id })
       }
     })
 
@@ -92,16 +115,23 @@
 
   async function upsert() {
     try {
-      await setDoc(doc(db, "votes", id), {
-        x,
-        y,
-        value,
-      })
+      await setDoc(
+        docRef,
+        {
+          [id]: { x: round(x), y: round(y), value },
+        },
+        { merge: true }
+      )
 
-      console.log("Document upserted with ID: ", id, { x, y, value })
+      // console.log("Document upserted with ID: ", id, { x, y, value })
     } catch (e) {
       console.error("Error adding document: ", e)
     }
+  }
+
+  function round(num, decimalPlaces = 3) {
+    var p = Math.pow(10, decimalPlaces)
+    return Math.round(num * p) / p
   }
 </script>
 
