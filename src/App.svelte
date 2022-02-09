@@ -150,7 +150,7 @@
 
   <div class="flex-grow w-full flex flex-col md:flex-row">
     <div class="flex-grow text-center flex flex-col">
-      <p class="underline text-red-600 text-xl mt-4">เดือดร้อน</p>
+      <p class="z-10 underline text-red-600 text-xl mt-4">เดือดร้อน</p>
       <div on:click={submitIsTroublesome} class="flex-grow mt-4 relative">
         {#each troublesomeEntries as entry (entry.id)}
           <div class="sticker absolute" style={`top: ${entry.y}%; left: ${entry.x}%; `}>
@@ -158,11 +158,11 @@
           </div>
         {/each}
       </div>
-      <p>{troublesomeEntries.length}</p>
+      <p class="z-10">{troublesomeEntries.length}</p>
     </div>
     <span class="h-0.5 w-full md:w-0.5 md:h-full bg-black md:mt-14" />
     <div class="flex-grow text-center flex flex-col">
-      <p class="underline text-red-600 text-xl mt-4">ไม่เดือดร้อน</p>
+      <p class="z-10 underline text-red-600 text-xl mt-4">ไม่เดือดร้อน</p>
       <div on:click={submitIsNotTroublesome} class="flex-grow mt-4 relative">
         {#each notTroublesomeEntries as entry (entry.id)}
           <div class="sticker absolute" style={`top: ${entry.y}%; left: ${entry.x}%; `}>
@@ -170,7 +170,7 @@
           </div>
         {/each}
       </div>
-      <p>{notTroublesomeEntries.length}</p>
+      <p class="z-10">{notTroublesomeEntries.length}</p>
     </div>
   </div>
 </main>
