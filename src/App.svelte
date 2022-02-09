@@ -111,13 +111,13 @@
 <Head {title} {description} {url} {imageUrl} {gtagId} />
 
 <main class="w-full h-screen p-2 flex flex-col items-center">
-  <h1 class="text-6xl flex gap-3 mt-2">
+  <h1 class="text-4xl md:text-6xl flex gap-3 mt-2">
     สร้างความ<span class="underline text-red-600">เดือดร้อน</span>หรือไม่
   </h1>
 
   <!-- <div class="fixed">x: {x}, y: {y}, value: {value}</div> -->
 
-  <div class="flex-grow w-full flex">
+  <div class="flex-grow w-full flex flex-col md:flex-row">
     <div class="flex-grow text-center flex flex-col">
       <p class="underline text-red-600 text-xl mt-4">เดือดร้อน</p>
       <div on:click={submitIsTroublesome} class="flex-grow mt-4 relative">
@@ -129,7 +129,7 @@
       </div>
       <p>{troublesomeEntries.length}</p>
     </div>
-    <span class="w-0.5 bg-black mt-14" />
+    <span class="h-0.5 w-full md:w-0.5 md:h-full bg-black mt-14" />
     <div class="flex-grow text-center flex flex-col">
       <p class="underline text-red-600 text-xl mt-4">ไม่เดือดร้อน</p>
       <div on:click={submitIsNotTroublesome} class="flex-grow mt-4 relative">
