@@ -156,6 +156,8 @@
     height: 2rem;
     width: 2rem;
     background-color: lime;
+    border-color: limegreen;
+    border-width: 2px;
     border-radius: 50%;
   }
 </style>
