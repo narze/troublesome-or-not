@@ -129,7 +129,7 @@
       </div>
       <p>{troublesomeEntries.length}</p>
     </div>
-    <span class="h-0.5 w-full md:w-0.5 md:h-full bg-black mt-14" />
+    <span class="h-0.5 w-full md:w-0.5 md:h-full bg-black md:mt-14" />
     <div class="flex-grow text-center flex flex-col">
       <p class="underline text-red-600 text-xl mt-4">ไม่เดือดร้อน</p>
       <div on:click={submitIsNotTroublesome} class="flex-grow mt-4 relative">
@@ -159,5 +159,15 @@
     border-color: limegreen;
     border-width: 2px;
     border-radius: 50%;
+  }
+
+  @media (max-width: 768px) {
+    .sticker {
+      margin-top: -0.75rem;
+      margin-left: -0.75rem;
+      height: 1.5rem;
+      width: 1.5rem;
+      border-width: 1px;
+    }
   }
 </style>
