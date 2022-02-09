@@ -69,6 +69,8 @@
     await upsert()
 
     alert("ขอบคุณสำหรับการโหวต!")
+
+    active = false
   }
 
   async function submitIsNotTroublesome(e) {
@@ -84,6 +86,8 @@
     await upsert()
 
     alert("ขอบคุณสำหรับการโหวต!")
+
+    active = false
   }
 
   async function upsert() {
