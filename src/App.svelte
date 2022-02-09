@@ -57,7 +57,8 @@
         entries[id] = { id, ...values }
       })
     })
-    console.log("Current data ", entries)
+
+    // console.log("Current data ", entries)
 
     Object.entries(entries).forEach(([id, entry]) => {
       const { x, y, value } = entry
@@ -73,11 +74,11 @@
     notTroublesomeEntries = nt
   })
 
-  // Active for 10 seconds only, to save quotas,
+  // Active for 5 minutes only, to save quotas,
   setTimeout(() => {
     active = false
     unsub()
-  }, 10000)
+  }, 5 * 60 * 1000)
 
   async function submitIsTroublesome(e) {
     if (!active) {
@@ -93,7 +94,7 @@
 
     alert("ขอบคุณสำหรับการโหวต!")
 
-    active = false
+    // active = false
   }
 
   async function submitIsNotTroublesome(e) {
@@ -110,7 +111,7 @@
 
     alert("ขอบคุณสำหรับการโหวต!")
 
-    active = false
+    // active = false
   }
 
   async function upsert() {
